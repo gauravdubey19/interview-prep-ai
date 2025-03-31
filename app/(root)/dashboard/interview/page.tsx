@@ -1,5 +1,5 @@
-import Agent from "@/components/pages/dasboard/Agent";
 import { getCurrentUser } from "@/lib/actions/auth.actions";
+import Agent from "@/components/pages/dasboard/interview/Agent";
 
 export default async function InterviewPage() {
   const user = await getCurrentUser();

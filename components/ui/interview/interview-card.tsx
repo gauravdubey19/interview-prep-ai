@@ -3,23 +3,24 @@ import dayjs from "dayjs";
 import Image from "next/image";
 import { Button } from "../button";
 import Link from "next/link";
+import { getFeedbackByInterviewId } from "@/lib/actions/interview.actions";
 
 const InterviewCard = async ({
   interviewId,
-  // userId,
+  userId,
   role,
   type,
   techstack,
   createdAt,
 }: InterviewCardProps) => {
-  const feedback = null as Feedback | null;
-  //   const feedback =
-  //     userId && interviewId
-  //       ? await getFeedbackByInterviewId({
-  //           interviewId,
-  //           userId,
-  //         })
-  //       : null;
+  // const feedback = null as Feedback | null;
+  const feedback =
+    userId && interviewId
+      ? await getFeedbackByInterviewId({
+          interviewId,
+          userId,
+        })
+      : null;
   const normalizedType = /mix/gi.test(type) ? "Mixed" : type;
   const formattedDate = dayjs(
     feedback?.createdAt || createdAt || Date.now()
@@ -89,8 +90,8 @@ const InterviewCard = async ({
             <Link
               href={
                 feedback
-                  ? `/interview/${interviewId}/feedback`
-                  : `/interview/${interviewId}`
+                  ? `/dashboard/interview/${interviewId}/feedback`
+                  : `/dashboard/interview/${interviewId}`
               }
             >
               {feedback ? "Check Feedback" : "View Interview"}
@@ -104,7 +105,7 @@ const InterviewCard = async ({
 
 export default InterviewCard;
 
-const DisplayTechIcons = async ({ techStack }: TechIconProps) => {
+export const DisplayTechIcons = async ({ techStack }: TechIconProps) => {
   const techIcons = await getTechLogos(techStack);
 
   return (
