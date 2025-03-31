@@ -1,15 +1,21 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "@/firebase/client";
+import { signIn, signUp } from "@/lib/actions/auth.actions";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import FormField from "../ui/form-field";
-import { useRouter } from "next/navigation";
 
 interface AuthFormType {
   type?: "sign-in" | "sign-up";
@@ -40,13 +46,46 @@ const AuthForm: React.FC<AuthFormType> = ({ type = "sign-in" }) => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
+      const { name, email, password } = values;
       if (isSingIn) {
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+
+        const idToken = await userCredential.user.getIdToken();
+
+        if (!idToken) {
+          toast.error("Sign in failed!");
+          return;
+        }
+        await signIn({ email, idToken });
+
         toast.success("Sign In Successful!");
         router.push("/dashboard");
       } else {
-        toast.success("Sign Up Successful!");
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+
+        const result = await signUp({
+          uid: userCredential.user.uid,
+          email,
+          password,
+          name: name!,
+        });
+
+        if (!result?.success) {
+          toast.error(result?.message || "Sign up failed");
+          return;
+        }
+        toast.success("Account Created Successfully! Please Sign In");
+        // toast.success("Sign Up Successful!");
         router.push("/auth/sign-in");
       }
       console.log(values);
