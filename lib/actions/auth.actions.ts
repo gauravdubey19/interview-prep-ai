@@ -20,6 +20,7 @@ export async function signUp(params: SignUpParams) {
       password,
       createdAt: new Date(),
       updatedAt: new Date(),
+      image: "/user-avatar.png",
     });
 
     return {
@@ -42,6 +43,57 @@ export async function signUp(params: SignUpParams) {
 
       return { success: false, message: "Faied to create an account!" };
     }
+  }
+}
+
+export async function signInWithGoogle(idToken: string) {
+  try {
+    // Verify the Google ID token
+    const decodedToken = await auth.verifyIdToken(idToken);
+    const { uid, email, name, picture } = decodedToken;
+
+    if (!email) {
+      return {
+        success: false,
+        message: "Email not provided from Google account",
+      };
+    }
+
+    // Check if user already exists
+    let userRecord;
+    try {
+      userRecord = await db.collection("users").doc(uid).get();
+    } catch (error) {
+      console.error("Error getting user:", error);
+    }
+
+    // If user doesn't exist, create a new one
+    if (!userRecord?.exists) {
+      await db
+        .collection("users")
+        .doc(uid)
+        .set({
+          email,
+          name: name || email.split("@")[0],
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          image: picture || "/user-avatar.png",
+          authProvider: "google",
+        });
+    }
+
+    // Set session cookie
+    await setSessionCookie(idToken);
+
+    return {
+      success: true,
+      message: userRecord?.exists
+        ? "Signed in successfully!"
+        : "Account created and signed in successfully!",
+    };
+  } catch (error) {
+    console.error("Error with Google authentication:", error);
+    return { success: false, message: "Failed to authenticate with Google" };
   }
 }
 
@@ -114,6 +166,21 @@ export async function isAuthenticated() {
 }
 
 export async function signOut() {
-  const cookiesStore = await cookies();
-  cookiesStore.delete("session");
+  try {
+    const user = await getCurrentUser();
+
+    if (user) {
+      // Revoke Firebase session
+      await auth.revokeRefreshTokens(user.id);
+    }
+
+    // Delete the session cookie
+    const cookiesStore = await cookies();
+    cookiesStore.delete("session");
+
+    return { success: true, message: "Signed out successfully" };
+  } catch (error) {
+    console.error("Error signing out:", error);
+    return { success: false, message: "Failed to sign out" };
+  }
 }

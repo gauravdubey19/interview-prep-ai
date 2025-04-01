@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import FormField from "../ui/form-field";
+import GoogleAuthButton from "./GoogleAuthButton";
 
 interface AuthFormType {
   type?: "sign-in" | "sign-up";
@@ -50,22 +51,34 @@ const AuthForm: React.FC<AuthFormType> = ({ type = "sign-in" }) => {
     try {
       const { name, email, password } = values;
       if (isSingIn) {
-        const userCredential = await signInWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
+        try {
+          const userCredential = await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+          );
 
-        const idToken = await userCredential.user.getIdToken();
+          const idToken = await userCredential.user.getIdToken();
 
-        if (!idToken) {
-          toast.error("Sign in failed!");
-          return;
+          if (!idToken) {
+            toast.error("Sign in failed!");
+            return;
+          }
+
+          await signIn({ email, idToken });
+
+          toast.success("Sign In Successful!");
+          router.push("/dashboard");
+        } catch (error: unknown) {
+          if (typeof error === "object" && error && "code" in error) {
+            if (error.code === "auth/invalid-credential") {
+              toast.error("Invalid email or password");
+            } else {
+              toast.error("Failed to sign in, please try again");
+            }
+          }
+          console.error(error);
         }
-        await signIn({ email, idToken });
-
-        toast.success("Sign In Successful!");
-        router.push("/dashboard");
       } else {
         const userCredential = await createUserWithEmailAndPassword(
           auth,
@@ -99,8 +112,8 @@ const AuthForm: React.FC<AuthFormType> = ({ type = "sign-in" }) => {
     <div className="card-border lg:min-w-[566px]">
       <div className="space-y-6 card py-16 px-10">
         <div className="flex flex-row gap-2 justify-center">
-          <Image src="/logo.svg" alt="auth-image" width={38} height={32} />
-          <h2 className="text-primary-100">InterviewPrep</h2>
+          <Image src="/logo.png" alt="auth-image" width={38} height={32} />
+          <h2 className="text-primary-100">AceInterviews</h2>
         </div>
 
         <h3 className="mt-10">Practice job interview with an AI</h3>
@@ -139,7 +152,14 @@ const AuthForm: React.FC<AuthFormType> = ({ type = "sign-in" }) => {
           </form>
         </Form>
 
-        <p className="text-center">
+        <div className="flex-center gap-1">
+          <span className="w-36 h-[1px] bg-[#8b8d93]"></span>
+          <span className="text-[#8b8d93] font-semibold">OR</span>
+          <span className="w-36 h-[1px] bg-[#8b8d93]"></span>
+        </div>
+        <GoogleAuthButton mode="signin" />
+
+        <p className="text-center mt-10">
           {isSingIn ? "New User?" : "Already have an account?"}
           <Link
             href={isSingIn ? "/auth/sign-up" : "/auth/sign-in"}

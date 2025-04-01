@@ -22,6 +22,7 @@ interface SavedMessage {
 
 const Agent = ({
   userName,
+  userPfp,
   userId,
   type,
   interviewId,
@@ -138,7 +139,7 @@ const Agent = ({
         <div className="card-border">
           <div className="card-content">
             <Image
-              src="/user-avatar.png"
+              src={userPfp || "/user-avatar.png"}
               alt="user-avatar"
               width={120}
               height={120}

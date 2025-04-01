@@ -39,6 +39,7 @@ const InterviewSession = ({
 
       <Agent
         userName={user.name!}
+        userPfp={user?.image || "/user-avatar.png"}
         userId={user?.id}
         interviewId={interviewId}
         type="interview"
