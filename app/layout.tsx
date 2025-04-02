@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://aceinterviews.com",
+    url: "https://aceinterviews.vercel.app",
     title: "AceInterviews | AI-Powered Interview Practice & Preparation Tool",
     description:
       "Prepare for job interviews with AceInterviews - an AI-powered platform that simulates real interview scenarios, provides instant feedback, and helps you improve your technical and soft skills.",
