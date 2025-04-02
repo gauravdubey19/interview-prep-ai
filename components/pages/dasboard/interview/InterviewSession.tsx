@@ -32,7 +32,7 @@ const InterviewSession = ({
           <DisplayTechIcons techStack={interview.techstack} />
         </div>
 
-        <p className="bg-dark-200 px-4 py-2 rounded-lg h-fit">
+        <p className="bg-dark-200 px-4 py-2 rounded-lg h-fit capitalize font-marcellus">
           {interview.type}
         </p>
       </div>

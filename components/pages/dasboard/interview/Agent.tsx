@@ -7,6 +7,8 @@ import { vapi } from "@/lib/vapi.sdk";
 import { cn } from "@/lib/utils";
 import { interviewer } from "@/constants";
 import { createFeedback } from "@/lib/actions/interview.actions";
+import { BiPhoneCall } from "react-icons/bi";
+import { HiOutlinePhoneMissedCall } from "react-icons/hi";
 
 enum CallStatus {
   CONNECTING = "CONNECTING",
@@ -170,7 +172,7 @@ const Agent = ({
       {/* btn */}
       <div className="w-full flex justify-center">
         {callStatus !== "ACTIVE" ? (
-          <button onClick={handleCall} className="relative btn-call">
+          <button onClick={handleCall} className="relative btn-call text-black">
             <span
               className={cn(
                 "absolute animate-ping rounded-full opacity-75",
@@ -178,13 +180,20 @@ const Agent = ({
               )}
             />
 
-            <span className="relative">
-              {isCallInactiveOrFinished ? "Call" : ". . ."}
+            <span className="relative flex-center gap-1">
+              <BiPhoneCall size={16} />
+              {isCallInactiveOrFinished
+                ? `Start a ${type === "generate" ? "Call" : "Interview"}`
+                : ". . ."}
             </span>
           </button>
         ) : (
-          <button onClick={handleDisconnect} className="btn-disconnect">
-            End
+          <button
+            onClick={handleDisconnect}
+            className="btn-disconnect flex-center gap-1"
+          >
+            <HiOutlinePhoneMissedCall size={16} />
+            End a {type === "generate" ? "Call" : "Interview"}
           </button>
         )}
       </div>

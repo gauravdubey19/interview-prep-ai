@@ -8,7 +8,7 @@ const HowItWorks = () => {
   return (
     <section
       id="how-it-works"
-      className="container mx-auto px-4 py-20 sm:py-28"
+      className="container mx-auto px-4 sm:py-16 md:py-28"
     >
       <div className="max-w-6xl mx-auto">
         <motion.div

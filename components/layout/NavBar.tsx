@@ -4,8 +4,15 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { signOut } from "@/lib/actions/auth.actions";
-import { Button } from "../ui/button";
 import { Button as MovingButton } from "../ui/moving-border";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 const NavBar = ({
   isUserAutenticated,
@@ -17,6 +24,7 @@ const NavBar = ({
   userPfp: string;
 }) => {
   const router = useRouter();
+
   const handleSignOut = async () => {
     const result = await signOut();
     if (result.success) router.push("/auth/sign-in");
@@ -27,42 +35,53 @@ const NavBar = ({
 
   return (
     <nav className="sticky top-4 z-50 flex items-center justify-between p-2 px-3 rounded-full backdrop-blur-md shadow-[1px_1px_5px_rgba(0,0,0,0.2)]">
-      <Link href="/" className="flex-center gap-3 overflow-hidden">
-        <Image src="/logo.png" alt="logo" width={38} height={32} />
-        <h2 className="text-primary-100 font-marcellus text-4xl mt-1">
+      <Link href="/" className="flex-center gap-3 overflow-hidden group">
+        <Image
+          src="/logo.png"
+          alt="logo"
+          width={100}
+          height={100}
+          className="w-7 h-7 lg:w-8 lg:h-8 object-cover overflow-hidden"
+        />
+        <h2 className="text-primary-100 font-marcellus  md:text-4xl mt-1 group-hover:text-cyan-500 ease-in-out duration-200">
           AceInterviews
         </h2>
       </Link>
 
       {isUserAutenticated ? (
-        <div className="w-10 h-10 relative group">
-          <Image
-            src={userPfp}
-            alt="user profile picture"
-            width={48}
-            height={48}
-            className="rounded-full cursor-pointer"
-          />
-          <div className="absolute right-0 top-11 w-fit bg-white/5 backdrop-blur-md shadow-lg rounded-md hidden group-hover:block">
-            <div className="w-full flex-center flex-col p-2 space-y-2">
-              <h4 className="text-md font-semibold capitalize font-marcellus">
-                {userName}
-              </h4>
-              <Link href="/dashboard" className="btn">
-                <Button variant="ghost">Dashboard</Button>
-              </Link>
-              <Button
-                variant="ghost"
-                className="text-sm text-red-500 hover:bg-red-500/80"
-                effect="gooeyRight"
-                type="button"
-                onClick={handleSignOut}
-              >
-                Sign out
-              </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <div className="w-10 h-10 cursor-pointer">
+              <Image
+                src={userPfp}
+                alt="user profile picture"
+                width={48}
+                height={48}
+                className="rounded-full"
+              />
             </div>
-          </div>
-        </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            align="end"
+            className="bg-white/5 backdrop-blur-lg"
+          >
+            <DropdownMenuLabel className="text-md font-semibold capitalize font-marcellus">
+              {userName}
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link href="/dashboard" className="w-full cursor-pointer">
+                Dashboard
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="text-red-500 cursor-pointer"
+              onClick={handleSignOut}
+            >
+              Sign out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       ) : (
         <Link href="/auth/sign-in">
           <MovingButton

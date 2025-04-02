@@ -66,8 +66,8 @@ const Home = () => {
           <Link href="/dashboard">
             <Button
               borderRadius="5.75rem"
-              containerClassName="w-60"
-              className="rounded-full text-lg bg-cyan-500 text-white cursor-pointer font-medium hover:bg-cyan-700 transition-colors ease-in-out duration-300"
+              containerClassName="md:w-60"
+              className="rounded-full md:text-lg bg-cyan-500 text-white cursor-pointer font-medium hover:bg-cyan-700 transition-colors ease-in-out duration-300"
             >
               Start Preparing
             </Button>
@@ -76,8 +76,8 @@ const Home = () => {
           <Link href="/#how-it-works">
             <Button
               borderRadius="5.75rem"
-              containerClassName="w-60"
-              className="rounded-full text-lg border border-gray-300 text-gray-200 cursor-pointer font-medium hover:bg-gray-50 hover:text-gray-950 transition-colors ease-in-out duration-300"
+              containerClassName="md:w-60"
+              className="rounded-full md:text-lg border border-gray-300 text-gray-200 cursor-pointer font-medium hover:bg-gray-50 hover:text-gray-950 transition-colors ease-in-out duration-300"
             >
               How It Works
             </Button>
@@ -86,9 +86,9 @@ const Home = () => {
         <div className="mt-16 flex flex-wrap justify-center gap-8">
           {/* Features list items */}
           {[
-            "Personalized Feedback",
             "Technical Interviews",
             "Behavioral Questions",
+            "Personalized Feedback",
           ].map((feature, index) => (
             <motion.div
               key={feature}

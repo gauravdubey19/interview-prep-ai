@@ -1,7 +1,12 @@
+"use client";
+
 import Image from "next/image";
 import { TextHoverEffect } from "../ui/text-hover-effect";
+import { usePathname } from "next/navigation";
 
 const Footer = () => {
+  const pathname = usePathname();
+  if (pathname.includes("/dashboard")) return null;
   return (
     <>
       <div className="w-full h-fit relative border-t border-primary-100/50">

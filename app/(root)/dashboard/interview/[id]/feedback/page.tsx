@@ -108,7 +108,7 @@ export default async function FeedbackPage({ params }: RouteParams) {
 
           <Button className="btn-primary flex-1">
             <Link
-              href={`/interview/${id}`}
+              href={`/dashboard/interview/${id}`}
               className="flex w-full justify-center"
             >
               <p className="text-sm font-semibold text-black text-center">
