@@ -183,7 +183,7 @@ const Agent = ({
             <span className="relative flex-center gap-1">
               <BiPhoneCall size={16} />
               {isCallInactiveOrFinished
-                ? `Start a ${type === "generate" ? "Call" : "Interview"}`
+                ? `Start ${type === "generate" ? "Call" : "Interview"}`
                 : ". . ."}
             </span>
           </button>
@@ -193,7 +193,7 @@ const Agent = ({
             className="btn-disconnect flex-center gap-1"
           >
             <HiOutlinePhoneMissedCall size={16} />
-            End a {type === "generate" ? "Call" : "Interview"}
+            End {type === "generate" ? "Call" : "Interview"}
           </button>
         )}
       </div>
